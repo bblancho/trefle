@@ -22,17 +22,25 @@ class Ingredient
         minMessage: 'Le nom doit faire au minimum {{ min }} caractères.',
         maxMessage: 'Le nom ne doit pas faire  plus de {{ limit }} caractères.',
     )]
-    private ?string $nom = null;
+    private string $nom;
 
     #[ORM\Column]
     #[Assert\NotNull()]
     #[Assert\Positive()]
     #[Assert\LessThan(200)]
-    private ?float $prix = null;
+    private float $prix;
 
     #[ORM\Column]
     #[Assert\NotNull()]
     private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable() ;
+    }
 
     public function getId(): ?int
     {
