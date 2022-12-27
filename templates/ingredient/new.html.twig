@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Création d'un ingrédient {% endblock %} 
+
+{% block body %}
+    {{ include(' /partials/_message.html.twig') }}
+	<h1 class='mt-4'> Ajouter un ingrédient </h1>
+
+	{{ form_start(form) }}
+		{{ form_rest(form) }}
+		<button class="btn btn-primary mt-4" type="submit"> Ajouter un ingrédient </button>
+	{{ form_end(form) }}
+
+{% endblock %}
