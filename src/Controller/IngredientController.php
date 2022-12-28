@@ -29,10 +29,11 @@ class IngredientController extends AbstractController
     }
 
     /**
-     * This function display all ingredeints
+     * This function display all ingredients
      * 
      * @param PaginatorInterface $paginator
      * @param Request $request
+     * 
      * @return Response
      */
     #[Route('/ingredient', name: 'ingredient.index', methods: ['GET'])]
@@ -50,7 +51,7 @@ class IngredientController extends AbstractController
     }
 
     /**
-     * This function create Formbuilder for ingredient
+     * This function create a new ingredient
      *
      * @return Response
      */
@@ -78,6 +79,92 @@ class IngredientController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    
+    /**
+     * This function edit a ingredient
+     *
+     * @param Request $request
+     * @param integer $id
+     * 
+     * @return Response
+     */
+    #[Route('/ingredient/eidter/{id}', name: 'ingredient.edit', methods: ['GET', 'POST']) ]
+    public function edit(Request $request,Ingredient $ingredient): Response
+    {
+        if ( !$ingredient ) {
+            throw $this->createNotFoundException('Aucun ingrédient trouvé');
+        }
+
+        $form = $this->createForm(IngredientType::class, $ingredient);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $ingredient = $form->getData();
+
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Votre ingrédient a bien été modifié avec succès!');
+
+            return $this->redirectToRoute("ingredient.index", ['id' => $ingredient]) ;
+        }
+
+        return $this->render('ingredient/edite.html.twig', [
+            'ingredient' => $ingredient,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * This function show a ingredient
+     * 
+     * @param ingredient $id
+     * 
+     * @return Response
+     */
+    // #[Route('/ingredient/{id}', name: 'ingredient.show', methods: ['GET'])]
+    // public function delete(int $id): Response
+    // {
+    //     
+        // $ingredient = $this->repoIngredient->find($id) ;
+
+        // if (!$ingredient) {
+        //     throw $this->createNotFoundException(
+        //         'Aucun ingrédient pour l\'id: ' . $id
+        //     );
+        // }
+
+    //     return $this->render('ingredient/show.html.twig', ['ingredient' => $ingredient]);
+    // }
+
+    
+    /**
+     * This function delete a ingredient
+     * 
+     * @param ingredient $id
+     * 
+     * @return Response
+     */
+    #[Route('/ingredient/supprimer/{id}', name: 'ingredient.delete', methods: ['POST'])]
+    public function show(int $id): Response
+    {   
+        $ingredient = $this->repoIngredient->find($id) ;
+
+        if ( !$ingredient ) {
+            $this->addFlash('warrning', 'Aucun ingrédient a trouvé !') ;
+            
+            return $this->redirectToRoute('ingredient.index') ;
+        }
+
+        $this->manager->remove($ingredient) ;
+        $this->manager->flush() ;
+
+        $this->addFlash('success', 'Votre ingrédient a bien été supprimé !') ;
+
+        return $this->redirectToRoute('ingredient.index') ;
+    }
+
 
 
 }
