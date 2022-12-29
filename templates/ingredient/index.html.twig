@@ -27,6 +27,7 @@
                         <th scope="col">Nom</th>
                         <th scope="col">Prix</th>
                         <th scope="col">Date de création</th>
+                        <th scope="col">Afficher</th>
                         <th scope="col">Edition</th>
                         <th scope="col">Suppression</th>
                     </tr>
@@ -35,11 +36,14 @@
                     {% for ingredient in ingredients %}
                         <tr  class="table table-primary">
                             <th scope="row">{{ ingredient.id }}</th>
-                            <td>{{ ingredient.nom }}</td>
-                            <td>{{ ingredient.prix }}</td>
-                            <td>{{ ingredient.createdAt|date('d/m/Y') }}</td>
-                            <td> <a href="{{ path('ingredient.edit',[id: ingredient.id]) }}" class="btn btn-primary"> Modifier </a> </td>
-                            <td> <a href="{{ path('ingredient.delete',[id: ingredient.id]) }}" class="btn btn-warning"> Supprimer </a> </td>
+                            <td> <a href="{{ path('ingredient.show',{id: ingredient.id}) }}"> {{ ingredient.nom }} </a> </td>
+                            <td> {{ ingredient.prix|number_format(2, '.', ',') }} €</td>
+                            <td> {{ ingredient.createdAt|date('d/m/Y') }}</td>
+                            <td> <a href="{{ path('ingredient.show',{id: ingredient.id}) }}" class="btn btn-success"> Afficher </a> </td>
+                            <td> <a href="{{ path('ingredient.edit',{id: ingredient.id}) }}" class="btn btn-info"> Modifier </a> </td>
+                            <td>
+                                <a href="{{ path('ingredient.delete', {id: ingredient.id}) }}" class="btn btn-warning"> Supprimer </a> 
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -51,6 +51,28 @@ class IngredientController extends AbstractController
     }
 
     /**
+     * This function show a ingredient
+     * 
+     * @param int $id
+     * 
+     * @return Response
+     */
+    #[Route('/ingredient/{id}', name: 'ingredient.show', requirements: ['id' => '\d+'] , methods: ['GET']) ]
+    public function delete(int $id): Response
+    {
+        
+        $ingredient = $this->repoIngredient->find($id) ;
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException(
+                'Aucun ingrédient pour l\'id: ' . $id
+            );
+        }
+
+        return $this->render('ingredient/show.html.twig', ['ingredient' => $ingredient]);
+    }
+
+    /**
      * This function create a new ingredient
      *
      * @return Response
@@ -107,7 +129,7 @@ class IngredientController extends AbstractController
 
             $this->addFlash('success', 'Votre ingrédient a bien été modifié avec succès!');
 
-            return $this->redirectToRoute("ingredient.index", ['id' => $ingredient]) ;
+            return $this->redirectToRoute("ingredient.show", ['id' => $ingredient->getId()]) ;
         }
 
         return $this->render('ingredient/edite.html.twig', [
@@ -115,28 +137,6 @@ class IngredientController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    /**
-     * This function show a ingredient
-     * 
-     * @param ingredient $id
-     * 
-     * @return Response
-     */
-    // #[Route('/ingredient/{id}', name: 'ingredient.show', methods: ['GET'])]
-    // public function delete(int $id): Response
-    // {
-    //     
-        // $ingredient = $this->repoIngredient->find($id) ;
-
-        // if (!$ingredient) {
-        //     throw $this->createNotFoundException(
-        //         'Aucun ingrédient pour l\'id: ' . $id
-        //     );
-        // }
-
-    //     return $this->render('ingredient/show.html.twig', ['ingredient' => $ingredient]);
-    // }
 
     
     /**
@@ -146,14 +146,14 @@ class IngredientController extends AbstractController
      * 
      * @return Response
      */
-    #[Route('/ingredient/supprimer/{id}', name: 'ingredient.delete', methods: ['POST'])]
+    #[Route('/ingredient/supprimer/{id}', name: 'ingredient.delete', methods: ['GET'])]
     public function show(int $id): Response
     {   
         $ingredient = $this->repoIngredient->find($id) ;
 
         if ( !$ingredient ) {
-            $this->addFlash('warrning', 'Aucun ingrédient a trouvé !') ;
-            
+            $this->addFlash('warning', 'Aucun ingrédient a trouvé !') ;
+
             return $this->redirectToRoute('ingredient.index') ;
         }
 
