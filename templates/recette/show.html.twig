@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ma recette
+{% endblock %}
+
+{% block body %}
+
+    {{ include('partials/_message.html.twig') }}
+
+	<div class="container">
+		<h1 clas='mt-4'> Description de la recette : {{ recette.nom }} </h1>
+
+	</div>
+
+{% endblock %}

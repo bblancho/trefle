@@ -15,16 +15,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IngredientController extends AbstractController
 {
-    private $manager;
+    private $em;
     private $repoIngredient;
     /**
      * Undocumented function
      * @param IngredientRepository $repoIngredient
      * @param EntityManagerInterface $manager
      */
-    public function __construct(EntityManagerInterface $manager, IngredientRepository $repoIngredient)
+    public function __construct(EntityManagerInterface $em, IngredientRepository $repoIngredient)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->repoIngredient = $repoIngredient;
     }
 
@@ -36,11 +36,11 @@ class IngredientController extends AbstractController
      * 
      * @return Response
      */
-    #[Route('/ingredient', name: 'ingredient.index', methods: ['GET'])]
+    #[Route('/ingredient', name: 'ingredient_index', methods: ['GET'])]
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
         $ingredients = $paginator->paginate(
-            $this->repoIngredient->findAll(), // Requête contenant les données à paginer (ici nos ingrédients)
+            $this->repoIngredient->findByLastIngredients(), // Requête contenant les données à paginer (ici nos ingrédients)
             $request->query->getInt('page', 1), // Numéro page en cours, passé dans l'URL, 1 si aucune page
             10 // Nombre de résultats par page
         );
@@ -57,15 +57,15 @@ class IngredientController extends AbstractController
      * 
      * @return Response
      */
-    #[Route('/ingredient/{id}', name: 'ingredient.show', requirements: ['id' => '\d+'] , methods: ['GET']) ]
-    public function delete(int $id): Response
+    #[Route('/ingredient/{id}', name: 'ingredient_show', requirements: ['id' => '\d+'] , methods: ['GET']) ]
+    public function show(int $id): Response
     {
         
         $ingredient = $this->repoIngredient->find($id) ;
 
         if (!$ingredient) {
             throw $this->createNotFoundException(
-                'Aucun ingrédient pour l\'id: ' . $id
+                'Aucun ingrédient trouvé pour l\'id: ' . $id
             );
         }
 
@@ -77,10 +77,11 @@ class IngredientController extends AbstractController
      *
      * @return Response
      */
-    #[Route('/ingredient/nouveau', name: 'ingredient.new', methods: ['GET', 'POST'])]
+    #[Route('/ingredient/nouveau', name: 'ingredient_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $ingredient = new Ingredient();
+
         $form = $this->createForm(IngredientType::class, $ingredient);
 
         $form->handleRequest($request);
@@ -89,12 +90,12 @@ class IngredientController extends AbstractController
 
             $ingredient = $form->getData();
 
-            $this->manager->persist($ingredient);
-            $this->manager->flush();
+            $this->em->persist($ingredient);
+            $this->em->flush();
 
             $this->addFlash('success', 'Votre ingrédient a bien été créé avec succès!');
 
-            return $this->redirectToRoute("ingredient.index") ;
+            return $this->redirectToRoute("ingredient_index") ;
         }
 
         return $this->render('ingredient/new.html.twig',[
@@ -111,8 +112,8 @@ class IngredientController extends AbstractController
      * 
      * @return Response
      */
-    #[Route('/ingredient/eidter/{id}', name: 'ingredient.edit', methods: ['GET', 'POST']) ]
-    public function edit(Request $request,Ingredient $ingredient): Response
+    #[Route('/ingredient/editer/{id}', name: 'ingredient_edit', methods: ['GET', 'POST']) ]
+    public function edit(Request $request, Ingredient $ingredient): Response
     {
         if ( !$ingredient ) {
             throw $this->createNotFoundException('Aucun ingrédient trouvé');
@@ -125,11 +126,11 @@ class IngredientController extends AbstractController
 
             $ingredient = $form->getData();
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Votre ingrédient a bien été modifié avec succès!');
 
-            return $this->redirectToRoute("ingredient.show", ['id' => $ingredient->getId()]) ;
+            return $this->redirectToRoute("ingredient_show", ['id' => $ingredient->getId()]) ;
         }
 
         return $this->render('ingredient/edite.html.twig', [
@@ -146,25 +147,24 @@ class IngredientController extends AbstractController
      * 
      * @return Response
      */
-    #[Route('/ingredient/supprimer/{id}', name: 'ingredient.delete', methods: ['GET'])]
-    public function show(int $id): Response
+    #[Route('/ingredient/supprimer/{id}', name: 'ingredient_delete', requirements: ['id' => '\d+'] , methods: ['GET'])]
+    public function delete(int $id): Response
     {   
         $ingredient = $this->repoIngredient->find($id) ;
 
         if ( !$ingredient ) {
             $this->addFlash('warning', 'Aucun ingrédient a trouvé !') ;
 
-            return $this->redirectToRoute('ingredient.index') ;
+            return $this->redirectToRoute('ingredient_index') ;
         }
 
-        $this->manager->remove($ingredient) ;
-        $this->manager->flush() ;
+        $this->em->remove($ingredient) ;
+        $this->em->flush() ;
 
         $this->addFlash('success', 'Votre ingrédient a bien été supprimé !') ;
 
-        return $this->redirectToRoute('ingredient.index') ;
+        return $this->redirectToRoute('ingredient_index') ;
     }
 
-
-
+    
 }

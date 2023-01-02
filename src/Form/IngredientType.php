@@ -20,7 +20,7 @@ class IngredientType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'minlength' => 2,
-                    'maxlength' => 50,
+                    'maxlength' => 51,
                 ],
                 'label'     => "Nom de l'ingédient",
                 'label_attr' => [
@@ -28,7 +28,7 @@ class IngredientType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Length([ 'min' => 2,'max' => 50 ]),
+                    new Assert\Length([ 'min' => 2,'max' => 51 ]),
                 ]
             ])
             ->add('prix', MoneyType::class, [
@@ -36,13 +36,13 @@ class IngredientType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ],
-                'label' => "Prix ", 
+                'label' => "Prix en ", 
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ],
                 'constraints' => [
                     new Assert\Positive(),
-                    new Assert\LessThan(200),
+                    new Assert\LessThan(201),
                 ]
             ])
         ;

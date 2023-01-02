@@ -65,7 +65,7 @@ class Recette
     private \DateTimeImmutable $updatedAt ;
 
     #[ORM\ManyToMany(targetEntity: Ingredient::class)]
-    private Collection $Ingredients;
+    private Collection $ingredients;
 
 
     /**
@@ -73,9 +73,18 @@ class Recette
      */
     public function __construct()
     {
-        $this->Ingredients = new ArrayCollection() ;
+        $this->ingredients = new ArrayCollection() ;
         $this->createdAt = new \DateTimeImmutable() ;
         $this->updatedAt = new \DateTimeImmutable() ;
+    }
+
+    /**
+     * Return string value
+     *
+     * @return string
+     */
+    public function __toString() {
+        return $this->nom;
     }
 
     #[ORM\PrePersist]
@@ -198,17 +207,17 @@ class Recette
     }
 
     /**
-     * @return Collection<int, Ingredient>
+     * @return Collection<int, ingredient>
      */
     public function getIngredients(): Collection
     {
-        return $this->Ingredients;
+        return $this->ingredients;
     }
 
     public function addIngredient(Ingredient $ingredient): self
     {
-        if (!$this->Ingredients->contains($ingredient)) {
-            $this->Ingredients->add($ingredient);
+        if ( !$this->ingredients->contains($ingredient) ) {
+            $this->ingredients->add($ingredient);
         }
 
         return $this;
@@ -216,7 +225,7 @@ class Recette
 
     public function removeIngredient(Ingredient $ingredient): self
     {
-        $this->Ingredients->removeElement($ingredient);
+        $this->ingredients->removeElement($ingredient);
 
         return $this;
     }

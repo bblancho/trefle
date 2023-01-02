@@ -39,4 +39,9 @@ class RecetteRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByLastRecette(): ?array
+    {
+        return $this->findBy( [], ['createdAt' => 'DESC'] ) ;
+    }
+
 }

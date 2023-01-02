@@ -11,7 +11,7 @@
 	<div class="container">
 		<h1 clas='mt-4'> Mes ingrédients </h1>
 
-        <a href="{{ path('ingredient.new') }}" class="btn btn-primary"> Créer un ingrédient </a>
+        <a href="{{ path('ingredient_new') }}" class="btn btn-primary"> Ajouter un ingrédient </a>
 
         {% if ingredients.items is not empty %}
 
@@ -36,13 +36,13 @@
                     {% for ingredient in ingredients %}
                         <tr  class="table table-primary">
                             <th scope="row">{{ ingredient.id }}</th>
-                            <td> <a href="{{ path('ingredient.show',{id: ingredient.id}) }}"> {{ ingredient.nom }} </a> </td>
+                            <td> <a href="{{ path('ingredient_show',{id: ingredient.id}) }}"> {{ ingredient.nom }} </a> </td>
                             <td> {{ ingredient.prix|number_format(2, '.', ',') }} €</td>
                             <td> {{ ingredient.createdAt|date('d/m/Y') }}</td>
-                            <td> <a href="{{ path('ingredient.show',{id: ingredient.id}) }}" class="btn btn-success"> Afficher </a> </td>
-                            <td> <a href="{{ path('ingredient.edit',{id: ingredient.id}) }}" class="btn btn-info"> Modifier </a> </td>
+                            <td> <a href="{{ path('ingredient_show',{id: ingredient.id}) }}" class="btn btn-success"> Afficher </a> </td>
+                            <td> <a href="{{ path('ingredient_edit',{id: ingredient.id}) }}" class="btn btn-info"> Modifier </a> </td>
                             <td>
-                                <a href="{{ path('ingredient.delete', {id: ingredient.id}) }}" class="btn btn-warning"> Supprimer </a> 
+                                <a href="{{ path('ingredient_delete', {id: ingredient.id}) }}" class="btn btn-warning"> Supprimer </a> 
                             </td>
                         </tr>
                     {% endfor %}

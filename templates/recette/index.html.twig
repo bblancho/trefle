@@ -1,20 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RecetteController!{% endblock %}
+{% block title %}
+	Mes recettes
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {{ include('partials/_message.html.twig') }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/ingredient/src/Controller/RecetteController.php'|file_link(0) }}">src/Controller/RecetteController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/ingredient/templates/recette/index.html.twig'|file_link(0) }}">templates/recette/index.html.twig</a></code></li>
-    </ul>
-</div>
+	<div class="container">
+		<h1 clas='mt-4'> Mes recettes </h1>
+
+        <a href="{{ path('recette_new') }}" class="btn btn-primary"> Créer une recette </a>
+
+        {% if recettes.items is not empty %}
+
+            <div class="count mt-4">
+                {% set var1=0 %}
+                il y a {{ recettes.getTotalItemCount }} recettes au total.
+            </div>
+
+            <table class="table table-hover mt-4">
+                <thead>
+                    <tr>
+                        <th scope="col">Identifiant</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prix en €</th>
+                        <th scope="col">Difficulté</th>
+                        <th scope="col">Date de création</th>
+                        <th scope="col">Afficher</th>
+                        <th scope="col">Edition</th>
+                        <th scope="col">Suppression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for recette in recettes %}
+                        <tr  class="table table-primary">
+                            <th scope="row">{{ recette.id }}</th>
+                            <td> <a href="{{ path('recette_show', {id: recette.id}) }}"> {{ recette.nom }} </a> </td>
+                            <td> {{ (recette.prix == null) ? "Non renseigné" : recette.prix|number_format(2, '.', ',')  }} </td>
+                            <td> {{ (recette.difficulte == null) ? "Non renseigné" : recette.difficulte }} </td>
+                            <td> {{ recette.createdAt|date('d/m/Y') }}</td>
+                            <td> <a href="{{ path('recette_show', {id: recette.id}) }}" class="btn btn-success"> Afficher </a> </td>
+                            <td> <a href="{{ path('recette_edit', {id: recette.id}) }}" class="btn btn-info"> Modifier </a> </td>
+                            <td>
+                                <a href="{{ path('recette_delete', {id: recette.id}) }}" class="btn btn-warning"> Supprimer </a> 
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(recettes) }}
+            </div>
+
+        {% else %}
+            <h2> Aucune recette trouvé </h2>
+        {% endif %}
+	</div>
+
 {% endblock %}

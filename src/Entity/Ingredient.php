@@ -44,6 +44,15 @@ class Ingredient
         $this->createdAt = new \DateTimeImmutable() ;
     }
 
+    /**
+     * Return string value
+     *
+     * @return string
+     */
+    public function __toString() {
+        return $this->nom;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

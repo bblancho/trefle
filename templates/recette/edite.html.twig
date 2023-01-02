@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Recette: {{ recette.nom }} {% endblock %} 
+
+{% block body %}
+
+	<h1 class='mt-4'> Modification de la Recette: {{ recette.nom }} </h1>
+
+	{{ include('recette/form.html.twig') }}
+
+{% endblock %}
