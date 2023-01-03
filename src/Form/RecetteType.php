@@ -7,6 +7,7 @@ use App\Entity\Recette;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -100,19 +101,14 @@ class RecetteType extends AbstractType
                     new Assert\NotBlank(),
                 ]
             ])
-            ->add('isFavori', ChoiceType::class, [
-                'choices' => [
-                    '------' => '',
-                    'Oui' => true,
-                    'Non' => false,
-                ],
+            ->add('isFavori', CheckboxType::class, [
                 'required' => false,
                 'attr'=>[
-                    'class' => "form-control "
+                    'class' => "form-check-input"
                 ],
                 'label' => " Favori ?",
                 'label_attr' => [
-                    'class' => "form-label mt-4",
+                    'class' => "form-check-label",
                 ],
                 'constraints' => [
                     new Assert\NotNull(),
