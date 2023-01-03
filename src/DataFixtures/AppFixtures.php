@@ -19,12 +19,10 @@ class AppFixtures extends Fixture
      */
     private Generator $faker;
 
-    private UserPasswordHasherInterface $hasher;
-
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct()
     {
         $this->faker = Factory::create('fr_FR') ;
-        $this->hasher = $hasher ;
+
     }
     
     public function load(ObjectManager $manager): void
@@ -71,24 +69,16 @@ class AppFixtures extends Fixture
 
             $user = new User();
 
-            $plaintextPassword = "Test2023";
-
             $user
                 ->setNom( $this->faker->name() )
                 ->setPrenom( $this->faker->firstName() )
                 ->setPseudo( mt_rand(0, 1) == 1 ? $this->faker->firstName() : null )
                 ->setEmail( $this->faker->email() )
                 ->setRoles(['ROLE_USER'])
+                ->setPlainPassword('Test2023') // rattaché à mon eventListener (userListener)
             ;
 
-            $hashedPassword = $this->hasher->hashPassword(
-                $user,
-                $plaintextPassword
-            );
-
-            $user->setPassword($hashedPassword);
-
-            $manager->persist($user);
+            $manager->persist($user); // déclenche l'eventListener (userListener)
         }
 
         $manager->flush();
