@@ -21,7 +21,9 @@ services:
             - '../src/Kernel.php'
     App\EntityListener\:
         resource: '../src/EntityListener/'
-        tags: ['doctrine.orm.entity_listener']
+        tags: 
+            - { name: 'doctrine.orm.entity_listener', event: prePersist , lazy: true}
+            - { name: 'doctrine.orm.entity_listener', event: preUpdate, lazy: true}
 
 
     # add more service definitions when explicit configuration is needed

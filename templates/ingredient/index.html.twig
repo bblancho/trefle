@@ -12,7 +12,7 @@
 		<h1 clas='mt-4'> Mes ingrédients </h1>
 
         <a href="{{ path('ingredient_new') }}" class="btn btn-primary"> Ajouter un ingrédient </a>
-
+         
         {% if ingredients.items is not empty %}
 
             <div class="count mt-4">
@@ -54,7 +54,7 @@
             </div>
 
         {% else %}
-            <h2> Aucun ingrédient trouvé </h2>
+            <h2 class="mt-4"> Aucun ingrédient trouvé </h2>
         {% endif %}
 	</div>
 
