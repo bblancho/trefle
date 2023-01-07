@@ -103,7 +103,6 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    
     /**
      * This function edit a ingredient
      *
@@ -139,7 +138,6 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    
     /**
      * This function delete a ingredient
      * 

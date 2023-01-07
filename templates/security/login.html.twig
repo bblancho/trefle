@@ -8,6 +8,8 @@
 
         <h1 class=" text-center"> Formulaire de Connexion </h1>
 
+        {{ include('partials/_message.html.twig') }}
+
         {% if error %}
             <div class="alert alert-danger">
                 {{ error.messageKey|trans(error.messageData, 'security') }}
