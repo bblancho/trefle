@@ -91,13 +91,13 @@ class RegistrationType extends AbstractType
                         'class' => 'form-label mt-4',
                     ],
                 ],
-                'first_options'  => ['label' => 'Mot de passe',],
+                'first_options'  => ['label' => 'Nouveau Mot de passe',],
                 'second_options' => ['label' => 'Confirmation du mot de passe'],
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length([ 'min' => 2,'max' => 50 ]),
                 ],
-                'invalid_message' => 'Les mots de passesne correspondent pas.',
+                'invalid_message' => 'Les mots de passes ne correspondent pas.',
             ])
         ;
     }

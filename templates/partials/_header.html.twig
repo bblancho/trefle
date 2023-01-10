@@ -23,6 +23,9 @@
 						<a class="nav-link" href="{{ path('user_edit', {id: app.user.id} ) }}"> Bienvenue {{ app.user.nom }} </a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link" href="{{ path('user_edit_password', {id: app.user.id} ) }}"> Mot de passe </a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link" href="{{ path('security_logout') }}"> Déconnexion </a>
 					</li>
 				{% else %}

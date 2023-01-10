@@ -42,6 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank()]
     private array $roles = [];
 
+    // Ce champs n'est pas sauvegardé dans la BDD
     private ?string $plainPassword = null;
 
     /**
