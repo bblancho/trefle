@@ -10,6 +10,8 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RecetteController extends AbstractController
@@ -34,6 +36,7 @@ class RecetteController extends AbstractController
      * @return Response
      */
     #[Route('/recette', name: 'recette_index', methods: ["GET"])]
+    #[IsGranted('ROLE_USER')]
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
         $recettes = $paginator->paginate(
@@ -55,6 +58,7 @@ class RecetteController extends AbstractController
      * 
      * @return Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route("/recette/creation", name: "recette_new", methods: ['GET', 'POST'])]
     public function new(Request $request, ManagerRegistry $doctrine): Response
     {
@@ -114,6 +118,7 @@ class RecetteController extends AbstractController
      * 
      * @return Response
      */
+    #[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
     #[Route('/recette/editer/{id}', name: 'recette_edit', methods: ['GET', 'POST']) ]
     public function edit(Request $request, ManagerRegistry $doctrine, Recette $recette ): Response
     {
@@ -152,6 +157,7 @@ class RecetteController extends AbstractController
      * 
      * @return Response
      */
+    #[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
     #[Route( '/recette/supprimer/{id}', name: 'recette_delete', requirements: ['id' => '\d+'] , methods: ['GET'])]
     public function delete(int $id, ManagerRegistry $doctrine): Response
     {

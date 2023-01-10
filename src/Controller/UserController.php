@@ -9,8 +9,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
@@ -19,39 +21,31 @@ class UserController extends AbstractController
      * This function edit a user
      *
      * @param Request $request
-     * @param User $user
+     * @param User $currentUser
      * @param ManagerRegistry $doctrine
      * 
      * @return Response
      */
+    #[Security("is_granted('ROLE_USER') and user === currentUser ")]
     #[Route('/utilisateur/edition/{id}', name: 'user_edit')]
-    public function edit(Request $request, ManagerRegistry $doctrine, User $user): Response
+    public function edit(Request $request, ManagerRegistry $doctrine, User $currentUser): Response
     {
         //  dd( $user, $this->getUser() ) ;
 
-        // On teste si le user est connecté
-        if( !$this->getUser() ) {
-            return $this->redirectToRoute('security_login');
-        }
-
-        // On teste si on a bien le user courant connecté
-        if( $this->getUser() !== $user) {
-            return $this->redirectToRoute('recette_index');
-        }
-
-        if ( !$user ) {
+        if ( !$currentUser ) {
             throw $this->createNotFoundException('Aucun utilisateur trouvé.') ;
         }
 
-        $form = $this->createForm(UserType::class, $user) ;
+        $form = $this->createForm(UserType::class, $currentUser) ;
         $form->handleRequest($request) ;
 
         if( $form->isSubmitted() && $form->isValid() ){
             
-            $user = $form->getData();
+            $currentUser = $form->getData();
 
             $em =  $doctrine->getManager();
 
+            $em->persist($currentUser);
             $em->flush();
 
             $this->addFlash('success', 'Votre compte a bien été modifié!');
@@ -62,7 +56,6 @@ class UserController extends AbstractController
 
         return $this->render('user/edite.html.twig', [
             'form' => $form->createView() ,
-            'user' => $user
         ]);
 
     }
@@ -71,47 +64,38 @@ class UserController extends AbstractController
      * This function edit a user
      *
      * @param Request $request
-     * @param User $user
+     * @param User $currentUser
      * @param ManagerRegistry $doctrine
      * @param UserPasswordHasherInterface $hasher
      * 
      * @return Response
      */
+    #[Security("is_granted('ROLE_USER') and user === currentUser ")]
     #[Route('/utilisateur/edition-mot-de-passe/{id}', name: 'user_edit_password')]
-    public function editPassword(Request $request, ManagerRegistry $doctrine, User $user, UserPasswordHasherInterface $hasher ): Response
+    public function editPassword(Request $request, ManagerRegistry $doctrine, User $currentUser, UserPasswordHasherInterface $hasher ): Response
     {
         // dd( $this->getUser() ) ;
 
-        // On teste si le user est connecté
-        if( !$this->getUser() ) {
-            return $this->redirectToRoute('security_login');
-        }
-
-        // On teste si on a bien le user courant connecté
-        if( $this->getUser() !== $user) {
-            return $this->redirectToRoute('recette_index');
-        }
-
-        if ( !$user ) {
+        if ( !$currentUser ) {
             throw $this->createNotFoundException('Aucun utilisateur trouvé.') ;
         }
 
-        $form = $this->createForm(UserPasswordType::class, $user) ;
+        $form = $this->createForm(UserPasswordType::class, $currentUser) ;
         $form->handleRequest($request) ;
-
 
         if( $form->isSubmitted() && $form->isValid() ){
             
-            $user = $form->getData();
+            $currentUser = $form->getData();
             $oldPassword = $form->get('oldPassword')->getData() ; 
 
-            if( $hasher->isPasswordValid( $user, $oldPassword ) ){
+            if( $hasher->isPasswordValid( $currentUser, $oldPassword ) ){
 
-                $user->setPassword( $form->getData()->getPlainPassword() ) ;
-                $user->setCreatedAt( new \DateTimeImmutable() ) ;
+                $currentUser->setPassword( $form->getData()->getPlainPassword() ) ;
+                $currentUser->setCreatedAt( new \DateTimeImmutable() ) ;
 
                 $em =  $doctrine->getManager();
 
+                $em->persist($currentUser);
                 $em->flush();
     
                 $this->addFlash('success', 'Votre mot de passe a bien été modifié !');
@@ -127,7 +111,6 @@ class UserController extends AbstractController
 
         return $this->render('user/edite_password.html.twig', [
             'form' => $form->createView() ,
-            'user' => $user
         ]);
 
     }
