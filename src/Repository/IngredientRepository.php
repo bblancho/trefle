@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Ingredient;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+
+use Symfony\Component\Security\Core\Security;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Ingredient>
@@ -16,8 +18,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class IngredientRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
+        $this->security = $security;
         parent::__construct($registry, Ingredient::class);
     }
 
@@ -33,7 +38,7 @@ class IngredientRepository extends ServiceEntityRepository
     public function remove(Ingredient $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
-
+        
         if ($flush) {
             $this->getEntityManager()->flush();
         }
@@ -56,7 +61,10 @@ class IngredientRepository extends ServiceEntityRepository
 
     public function findByLastIngredients(): ?array
     {
-        return $this->findBy( [], ['createdAt' => 'DESC'] ) ;
+        // get the user to be authenticated
+        $user = $this->security->getUser() ;
+
+        return $this->findBy( ['user' => $user ], ['createdAt' => 'DESC'] ) ;
     }
 
 }

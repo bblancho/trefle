@@ -24,6 +24,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Identifiant</th>
+                        <th scope="col">Propriétaire</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Prix</th>
                         <th scope="col">Date de création</th>
@@ -36,6 +37,7 @@
                     {% for ingredient in ingredients %}
                         <tr  class="table table-primary">
                             <th scope="row">{{ ingredient.id }}</th>
+                            <th scope="row">{{ ingredient.user.nom }}</th>
                             <td> <a href="{{ path('ingredient_show',{id: ingredient.id}) }}"> {{ ingredient.nom }} </a> </td>
                             <td> {{ ingredient.prix|number_format(2, '.', ',') }} €</td>
                             <td> {{ ingredient.createdAt|date('d/m/Y') }}</td>
