@@ -27,23 +27,45 @@ class AppFixtures extends Fixture
     
     public function load(ObjectManager $manager): void
     {
+        // User
+        $users = [] ;
+
+        for ($i=1; $i < 10 ; $i++) { 
+
+            $user = new User();
+
+            $user
+                ->setNom( $this->faker->name() )
+                ->setPrenom( $this->faker->firstName() )
+                ->setPseudo( mt_rand(0, 1) == 1 ? $this->faker->firstName() : null )
+                ->setEmail( $this->faker->email() )
+                ->setRoles(['ROLE_USER'])
+                ->setPlainPassword('Test2023') // rattaché à mon eventListener (userListener)
+            ;
+
+            $users[] = $user;
+
+            $manager->persist($user); // déclenche l'eventListener (userListener)
+        }
+
         // Ingrédients
-        // $ingredients = [] ;
+        $ingredients = [] ;
         
-        // for ($i=1; $i < 50 ; $i++) { 
+        for ($i=1; $i < 50 ; $i++) { 
 
-        //     $ingredient = new Ingredient();
-        //     $ingredient
-        //         ->setNom( $this->faker->word(3) )
-        //         ->setPrix( mt_rand(0, 100) )
-        //     ;
+            $ingredient = new Ingredient();
+            $ingredient
+                ->setNom( $this->faker->word(3) )
+                ->setPrix( mt_rand(0, 100) )
+                ->setUser( $users[mt_rand( 0 , count($users) - 1 )] )
+            ;
 
-        //     $ingredients[] =  $ingredient;
+            $ingredients[] =  $ingredient;
 
-        //     $manager->persist($ingredient);
-        // }
+            $manager->persist($ingredient);
+        }
 
-        // recettes
+        //recettes
         // for ($i=1; $i < 25 ; $i++) { 
 
         //     $recette = new Recette();
@@ -64,22 +86,7 @@ class AppFixtures extends Fixture
         //     $manager->persist($recette);
         // }
 
-        // User
-        for ($i=1; $i < 10 ; $i++) { 
 
-            $user = new User();
-
-            $user
-                ->setNom( $this->faker->name() )
-                ->setPrenom( $this->faker->firstName() )
-                ->setPseudo( mt_rand(0, 1) == 1 ? $this->faker->firstName() : null )
-                ->setEmail( $this->faker->email() )
-                ->setRoles(['ROLE_USER'])
-                ->setPlainPassword('Test2023') // rattaché à mon eventListener (userListener)
-            ;
-
-            $manager->persist($user); // déclenche l'eventListener (userListener)
-        }
 
         $manager->flush();
     }

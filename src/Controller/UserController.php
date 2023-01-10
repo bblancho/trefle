@@ -25,7 +25,7 @@ class UserController extends AbstractController
      * @return Response
      */
     #[Route('/utilisateur/edition/{id}', name: 'user_edit')]
-    public function edit(Request $request, ManagerRegistry $doctrine, User $user, UserPasswordHasherInterface $hasher ): Response
+    public function edit(Request $request, ManagerRegistry $doctrine, User $user): Response
     {
         //  dd( $user, $this->getUser() ) ;
 
@@ -73,10 +73,11 @@ class UserController extends AbstractController
      * @param Request $request
      * @param User $user
      * @param ManagerRegistry $doctrine
+     * @param UserPasswordHasherInterface $hasher
      * 
      * @return Response
      */
-    #[Route('/utilisateur/edition/password/{id}', name: 'user_edit_password')]
+    #[Route('/utilisateur/edition-mot-de-passe/{id}', name: 'user_edit_password')]
     public function editPassword(Request $request, ManagerRegistry $doctrine, User $user, UserPasswordHasherInterface $hasher ): Response
     {
         // dd( $this->getUser() ) ;
