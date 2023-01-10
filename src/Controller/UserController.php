@@ -107,6 +107,7 @@ class UserController extends AbstractController
             if( $hasher->isPasswordValid( $user, $oldPassword ) ){
 
                 $user->setPassword( $form->getData()->getPlainPassword() ) ;
+                $user->setCreatedAt( new \DateTimeImmutable() ) ;
 
                 $em =  $doctrine->getManager();
 
@@ -118,7 +119,7 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('recette_index');
 
             } else {
-                $this->addFlash('warning', 'Les mots de passes soumis sont différent !');
+                $this->addFlash('error', "Erreur sur l'ancien mot de passe.");
             }
 
         }
