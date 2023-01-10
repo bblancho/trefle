@@ -2,23 +2,32 @@
 
 namespace App\Form;
 
-use App\Entity\Ingredient;
 use App\Entity\Recette;
+use App\Entity\Ingredient;
+use App\Repository\IngredientRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-
+use Symfony\Component\Security\Core\Security;
 
 class RecetteType extends AbstractType
 {
+
+    private $security ;
+
+    public function __construct(Security $security )
+    {
+        $this->security = $security ;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -130,7 +139,13 @@ class RecetteType extends AbstractType
             ])
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class, // looks for choices from this entity
-                'choice_label' => 'nom', // uses the Ingredient.nom property as the visible option string
+                'query_builder' => function(IngredientRepository $repository)  {
+                    return $repository->createQueryBuilder('i')
+                        ->where('i.user = :user')
+                        ->setParameter('user', $this->security->getUser() )
+                    ;
+                },
+                'choice_value' => 'nom', // uses the Ingredient.nom property as the visible option string
                 'multiple' => true, // used to render a select box, check boxes or radios
                 'expanded' => false,
                 'required' => false,
