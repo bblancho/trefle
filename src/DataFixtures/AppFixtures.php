@@ -35,7 +35,7 @@ class AppFixtures extends Fixture
             $user = new User();
 
             $user
-                ->setNom( $this->faker->name() )
+                ->setNom( $this->faker->lastName() )
                 ->setPrenom( $this->faker->firstName() )
                 ->setPseudo( mt_rand(0, 1) == 1 ? $this->faker->firstName() : null )
                 ->setEmail( $this->faker->email() )
@@ -66,25 +66,26 @@ class AppFixtures extends Fixture
         }
 
         //recettes
-        // for ($i=1; $i < 25 ; $i++) { 
+        for ($i=1; $i < 25 ; $i++) { 
 
-        //     $recette = new Recette();
-        //     $recette
-        //         ->setNom( $this->faker->word() )
-        //         ->setTime( mt_rand(0, 1) == 1 ? mt_rand(1, 1441) : null)
-        //         ->setnbPersonne( mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
-        //         ->setDifficulte( mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
-        //         ->setDescription( $this->faker->text(150) )
-        //         ->setPrix( mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
-        //         ->setIsFavori( mt_rand(0, 1) == 1 ? true : false)
-        //     ;
+            $recette = new Recette();
+            $recette
+                ->setNom( $this->faker->word() )
+                ->setTime( mt_rand(0, 1) == 1 ? mt_rand(1, 1441) : null)
+                ->setnbPersonne( mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
+                ->setDifficulte( mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
+                ->setDescription( $this->faker->text(150) )
+                ->setPrix( mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
+                ->setIsFavori( mt_rand(0, 1) == 1 ? true : false)
+                ->setUser( $users[mt_rand( 0 , count($users) - 1 )] )
+            ;
 
-        //     for ($j=0; $j < mt_rand(5, 15); $j++) { 
-        //         $recette->addIngredient( $ingredients[ mt_rand(0, count($ingredients) -1)]);
-        //     }
+            for ($j=0; $j < mt_rand(5, 15); $j++) { 
+                $recette->addIngredient( $ingredients[ mt_rand(0, count($ingredients) -1)]);
+            }
 
-        //     $manager->persist($recette);
-        // }
+            $manager->persist($recette);
+        }
 
 
 

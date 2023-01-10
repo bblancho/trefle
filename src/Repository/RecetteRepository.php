@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Recette;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\Security\Core\Security;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,8 +17,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RecetteRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
+        $this->security = $security;
         parent::__construct($registry, Recette::class);
     }
 
@@ -41,7 +45,9 @@ class RecetteRepository extends ServiceEntityRepository
 
     public function findByLastRecette(): ?array
     {
-        return $this->findBy( [], ['createdAt' => 'DESC'] ) ;
+        $user = $this->security->getUser() ;
+
+        return $this->findBy( ["user" => $user ], ['createdAt' => 'DESC'] ) ;
     }
 
 }

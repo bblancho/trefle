@@ -24,6 +24,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Identifiant</th>
+                        <th scope="col">Propriétaire</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Prix en €</th>
                         <th scope="col">Difficulté</th>
@@ -37,6 +38,7 @@
                     {% for recette in recettes %}
                         <tr  class="table table-primary">
                             <th scope="row">{{ recette.id }}</th>
+                            <th>{{ app.user.nom|upper }}</th>
                             <td> <a href="{{ path('recette_show', {id: recette.id}) }}"> {{ recette.nom }} </a> </td>
                             <td> {{ (recette.prix == null) ? "Non renseigné" : recette.prix|number_format(2, '.', ',')  }} </td>
                             <td> {{ (recette.difficulte == null) ? "Non renseigné" : recette.difficulte }} </td>

@@ -67,6 +67,7 @@ class RecetteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $recette = $form->getData();
+            $recette->setUser( $this->getUser() ) ;
 
             $em =  $doctrine->getManager();
 

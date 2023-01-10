@@ -37,7 +37,7 @@
                     {% for ingredient in ingredients %}
                         <tr  class="table table-primary">
                             <th scope="row">{{ ingredient.id }}</th>
-                            <th scope="row">{{ ingredient.user.nom }}</th>
+                            <th scope="row">{{ ingredient.user.nom|upper }}</th>
                             <td> <a href="{{ path('ingredient_show',{id: ingredient.id}) }}"> {{ ingredient.nom }} </a> </td>
                             <td> {{ ingredient.prix|number_format(2, '.', ',') }} €</td>
                             <td> {{ ingredient.createdAt|date('d/m/Y') }}</td>
