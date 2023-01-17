@@ -74,6 +74,9 @@ class Recette
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\OneToMany(mappedBy: 'recette', targetEntity: Note::class, orphanRemoval: true)]
+    private Collection $notes;
+
 
 
     /**
@@ -84,6 +87,7 @@ class Recette
         $this->ingredients = new ArrayCollection() ;
         $this->createdAt = new \DateTimeImmutable() ;
         $this->updatedAt = new \DateTimeImmutable() ;
+        $this->notes = new ArrayCollection();
     }
 
     /**
@@ -258,6 +262,36 @@ class Recette
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getRecette() === $this) {
+                $note->setRecette(null);
+            }
+        }
 
         return $this;
     }
