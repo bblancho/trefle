@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Mes recettes
+{% endblock %}
+
+{% block body %}
+
+    {{ include('partials/_message.html.twig') }}
+
+	<div class="container">
+		<h1 class='mt-4'> Recettes de la communauté </h1>
+        
+        	{# {{ dump(recettes) }} #}
+
+        {% if recettes.items is not empty %}
+
+            <div class="count mt-4"> il y a {{ recettes.getTotalItemCount }} recettes au total. </div>
+
+            <div class="d-flex justify-content-center flex-wrap">
+                {% for recette in recettes %}
+                    <div class="card border-primary mb-3">
+                        <div class="card-header"> Receette numéro: {{ recette.id }}</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ recette.nom }}</h4>
+                            <p class="card-text">{{ recette.description|slice( 0, 20) ~ "...." }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(recettes) }}
+            </div>
+
+        {% else %}
+            <h2> Aucune recette trouvé </h2>
+        {% endif %}
+	</div>
+
+{% endblock %}

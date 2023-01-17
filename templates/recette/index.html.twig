@@ -9,14 +9,14 @@
     {{ include('partials/_message.html.twig') }}
 
 	<div class="container">
-		<h1 clas='mt-4'> Mes recettes </h1>
+		<h1 class='mt-4'> Mes recettes </h1>
 
         <a href="{{ path('recette_new') }}" class="btn btn-primary"> Créer une recette </a>
+        <a href="{{ path('recette_publique') }}" class="btn btn-info"> Recette publique </a>
 
         {% if recettes.items is not empty %}
 
             <div class="count mt-4">
-                {% set var1=0 %}
                 il y a {{ recettes.getTotalItemCount }} recettes au total.
             </div>
 
@@ -29,6 +29,7 @@
                         <th scope="col">Prix en €</th>
                         <th scope="col">Difficulté</th>
                         <th scope="col">Date de création</th>
+                        <th scope="col"> Publique </th>
                         <th scope="col">Afficher</th>
                         <th scope="col">Edition</th>
                         <th scope="col">Suppression</th>
@@ -42,7 +43,8 @@
                             <td> <a href="{{ path('recette_show', {id: recette.id}) }}"> {{ recette.nom }} </a> </td>
                             <td> {{ (recette.prix == null) ? "Non renseigné" : recette.prix|number_format(2, '.', ',')  }} </td>
                             <td> {{ (recette.difficulte == null) ? "Non renseigné" : recette.difficulte }} </td>
-                            <td> {{ recette.createdAt|date('d/m/Y') }}</td>
+                            <td> {{ recette.createdAt|date('d/m/Y') }} </td>
+                            <td> {{ (recette.isPublique == true) ? "<span class='bg-success'> OUI </span>" : "<span class='bg-danger'> NON </span>" }} </td>
                             <td> <a href="{{ path('recette_show', {id: recette.id}) }}" class="btn btn-success"> Afficher </a> </td>
                             <td> <a href="{{ path('recette_edit', {id: recette.id}) }}" class="btn btn-info"> Modifier </a> </td>
                             <td>

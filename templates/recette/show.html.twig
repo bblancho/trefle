@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Ma recette
+	Recette - {{ recette.nom|upper }}
 {% endblock %}
 
 {% block body %}
@@ -9,8 +9,52 @@
     {{ include('partials/_message.html.twig') }}
 
 	<div class="container">
-		<h1 clas='mt-4'> Description de la recette : {{ recette.nom }} </h1>
+		{{ dump(recette) }}
 
+		<h1 class='mt-4'> Description de la recette : {{ recette.nom|upper }} </h1>
+		<span class="badge bg-primary"> Créée le {{ recette.createdAt|date('d/m/Y') }} </span>
+
+		{% if recette.time %}
+			<p> Temps (en minute) :
+				{{ recette.time }}
+			</p>
+		{% else %}
+			<p> Temps non renseigné </p>
+		{% endif %}
+
+		{% if recette.nbPersonne %}
+			<p> Pour
+				{{ recette.nbPersonne }} personne(s)
+			</p>
+		{% else %}
+			<p> Nombre de personnes non renseignées </p>
+		{% endif %}
+
+		{% if recette.difficulte %}
+			<p> Difficulté :
+				{{ recette.difficulte }}/5
+			</p>
+		{% else %}
+			<p> Difficulté non renseignée </p>
+		{% endif %}
+
+		{% if recette.prix %}
+			<p> Prix en (€) :
+				{{ recette.prix|number_format(2, '.', ',') }} €
+			</p>
+		{% else %}
+			<p> Prix non renseigné </p>
+		{% endif %}	
+
+		<p> Description :
+			{{ recette.description|raw }}
+		</p>
+
+		<h2 class="mt-4"> Liste des ingrédients </h2>
+
+		{% for ingredient in recette.ingredients %}
+			<span class="badge bg-primary mt-2">{{ ingredient.nom }} </span>
+		{% endfor %}
 	</div>
 
 {% endblock %}

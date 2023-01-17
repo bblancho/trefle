@@ -16,5 +16,23 @@
 			<p>Pour commencer rendez-vous sur la page d'inscription pour utiliser l'application.</p>
 			<a class="btn btn-primary btn-lg" href="#" role="button"> Inscription </a>
 		</div>
+
+		<div class="recette">
+			<h2 class="mt-4"> Recettes de la communauté</h2>
+
+			<div class="d-flex justify-content-between">
+				{% for recette in recettes %}
+					<div class="card border-primary mb-3">
+						<div class="card-header"> Receette numéro: {{ recette.id }}</div>
+						<div class="card-body">
+							<h4 class="card-title">{{ recette.nom }}</h4>
+							<p class="card-text">{{ recette.description|slice( 0, 20) ~ "...." }}</p>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
 	</div>
+
 {% endblock %}

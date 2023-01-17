@@ -49,6 +49,27 @@ class RecetteController extends AbstractController
             'recettes',
         ));
     }
+     /**
+     * This function display all recettes public
+     * 
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * 
+     * @return Response
+     */
+    #[Route('/recette/publique', name: 'recette_publique', methods: ["GET"])]
+    public function indexPublic(PaginatorInterface $paginator, Request $request): Response
+    {
+        $recettes = $paginator->paginate(
+            $this->repoRecette->findByRecettePublique(11), // Requête contenant les données à paginer (ici nos recettes)
+            $request->query->getInt('page', 1), // Numéro page en cours, passé dans l'URL, 1 si aucune page
+            10 // Nombre de résultats par page
+        );
+
+        return $this->render('recette/indexPublic.html.twig', compact(
+            'recettes',
+        ));
+    }
 
     /**
      *  This function create a new recette
@@ -96,14 +117,13 @@ class RecetteController extends AbstractController
      * 
      * @return Response
      */
-    #[Route('/recette/{id}', name: "recette_show", requirements: ['id' => '\d+'] , methods: ['GET'])]
-    public function show(int $id): Response
+    #[Security("is_granted('ROLE_USER') and recette.getIsPublique() === true")]
+    #[Route('/recette/{id}', name: "recette_show", methods: ['GET'])]
+    public function show(Recette $recette): Response
     {
-        $recette = $this->repoRecette->find($id);
-
         if (!$recette) {
             throw $this->createNotFoundException(
-                'Aucune recette trouvé pour l\'id: ' . $id
+                'Aucune recette trouvé pour l\'id: ' . $recette.getId() 
             );
         }
 
@@ -118,7 +138,7 @@ class RecetteController extends AbstractController
      * 
      * @return Response
      */
-    #[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
+    #[Security("is_granted('ROLE_USER') and user === recette.getUser()")]
     #[Route('/recette/editer/{id}', name: 'recette_edit', methods: ['GET', 'POST']) ]
     public function edit(Request $request, ManagerRegistry $doctrine, Recette $recette ): Response
     {
@@ -157,7 +177,7 @@ class RecetteController extends AbstractController
      * 
      * @return Response
      */
-    #[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
+    #[Security("is_granted('ROLE_USER') and user === recette.getUser()")]
     #[Route( '/recette/supprimer/{id}', name: 'recette_delete', requirements: ['id' => '\d+'] , methods: ['GET'])]
     public function delete(int $id, ManagerRegistry $doctrine): Response
     {

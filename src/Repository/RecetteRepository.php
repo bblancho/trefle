@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Recette;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Component\Security\Core\Security;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Recette>
@@ -48,6 +48,28 @@ class RecetteRepository extends ServiceEntityRepository
         $user = $this->security->getUser() ;
 
         return $this->findBy( ["user" => $user ], ['createdAt' => 'DESC'] ) ;
+    }
+
+    /**
+     * This method display all recettes based on number of recettes
+     * 
+     * @param integer $nbRecettes
+     * 
+     * @return array
+     */
+    public function findByRecettePublique( ?int $nbRecettes ): ?array
+    {
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->Where('r.isPublique = 1')
+            ->orderBy('r.createdAt', 'DESC') ;
+        
+        if( $nbRecettes !== 0 || $nbRecettes !== null){
+            $queryBuilder->setMaxResults( $nbRecettes ) ;
+        }
+
+        return $queryBuilder ->getQuery()
+            ->getResult()
+        ;
     }
 
 }

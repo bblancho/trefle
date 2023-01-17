@@ -123,6 +123,19 @@ class RecetteType extends AbstractType
                     new Assert\NotNull(),
                 ]
             ])
+            ->add('isPublique', CheckboxType::class, [
+                'required' => true,
+                'attr'=>[
+                    'class' => "form-check-input"
+                ],
+                'label' => " Publique ?",
+                'label_attr' => [
+                    'class' => "form-check-label",
+                ],
+                'constraints' => [
+                    new Assert\NotNull(),
+                ]
+            ])
             ->add('prix', MoneyType::class, [
                 'required' => false,
                 'attr' => [

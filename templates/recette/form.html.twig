@@ -62,11 +62,18 @@
 
 	<div class="form-group">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-3">
 				{{ form_label(form.isFavori) }}
 				{{ form_widget(form.isFavori) }}
 				<div class="form-error">
 					{{ form_errors(form.isFavori) }}
+				</div>
+			</div>
+			<div class="col-md-3">
+				{{ form_label(form.isPublique) }}
+				{{ form_widget(form.isPublique) }}
+				<div class="form-error">
+					{{ form_errors(form.isPublique) }}
 				</div>
 			</div>
 			<div class="col-md-6">

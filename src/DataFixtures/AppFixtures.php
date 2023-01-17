@@ -28,25 +28,25 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         // User
-        $users = [] ;
+        // $users = [] ;
 
-        for ($i=1; $i < 10 ; $i++) { 
+        // for ($i=1; $i < 10 ; $i++) { 
 
-            $user = new User();
+        //     $user = new User();
 
-            $user
-                ->setNom( $this->faker->lastName() )
-                ->setPrenom( $this->faker->firstName() )
-                ->setPseudo( mt_rand(0, 1) == 1 ? $this->faker->firstName() : null )
-                ->setEmail( $this->faker->email() )
-                ->setRoles(['ROLE_USER'])
-                ->setPlainPassword('Test2023') // rattaché à mon eventListener (userListener)
-            ;
+        //     $user
+        //         ->setNom( $this->faker->lastName() )
+        //         ->setPrenom( $this->faker->firstName() )
+        //         ->setPseudo( mt_rand(0, 1) == 1 ? $this->faker->firstName() : null )
+        //         ->setEmail( $this->faker->email() )
+        //         ->setRoles(['ROLE_USER'])
+        //         ->setPlainPassword('Test2023') // rattaché à mon eventListener (userListener)
+        //     ;
 
-            $users[] = $user;
+        //     $users[] = $user;
 
-            $manager->persist($user); // déclenche l'eventListener (userListener)
-        }
+        //     $manager->persist($user); // déclenche l'eventListener (userListener)
+        // }
 
         // Ingrédients
         $ingredients = [] ;
@@ -77,6 +77,7 @@ class AppFixtures extends Fixture
                 ->setDescription( $this->faker->text(150) )
                 ->setPrix( mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
                 ->setIsFavori( mt_rand(0, 1) == 1 ? true : false)
+                ->setIsPublique( mt_rand(0, 1) == 1 ? true : false )
                 ->setUser( $users[mt_rand( 0 , count($users) - 1 )] )
             ;
 

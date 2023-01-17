@@ -57,6 +57,9 @@ class Recette
     private bool $isFavori ;
 
     #[ORM\Column]
+    private ?bool $isPublique = null;
+
+    #[ORM\Column]
     #[Assert\NotNull()]
     private \DateTimeImmutable $createdAt ;
 
@@ -70,6 +73,7 @@ class Recette
     #[ORM\ManyToOne(inversedBy: 'recettes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
 
 
     /**
@@ -174,7 +178,7 @@ class Recette
         return $this;
     }
 
-    public function isIsFavori(): ?bool
+    public function getIsFavori(): ?bool
     {
         return $this->isFavori;
     }
@@ -182,6 +186,18 @@ class Recette
     public function setIsFavori(bool $isFavori): self
     {
         $this->isFavori = $isFavori;
+
+        return $this;
+    }
+
+    public function getIsPublique(): ?bool
+    {
+        return $this->isPublique;
+    }
+
+    public function setIsPublique(bool $isPublique): self
+    {
+        $this->isPublique = $isPublique;
 
         return $this;
     }
@@ -245,5 +261,7 @@ class Recette
 
         return $this;
     }
+
+   
 
 }
