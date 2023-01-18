@@ -22,6 +22,8 @@ class Note
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\Positive()]
+    #[Assert\LessThan(6)]
     private ?int $note = null;
 
     #[ORM\ManyToOne(inversedBy: 'recette')]

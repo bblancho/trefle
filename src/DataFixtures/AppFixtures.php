@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use Faker\Factory;
+use App\Entity\Note;
 use App\Entity\User;
 use Faker\Generator;
 use App\Entity\Recette;
@@ -21,24 +22,22 @@ class AppFixtures extends Fixture
 
     public function __construct()
     {
-        $this->faker = Factory::create('fr_FR') ;
-
+        $this->faker = Factory::create('fr_FR');
     }
-    
+
     public function load(ObjectManager $manager): void
     {
         // User
-        $users = [] ;
+        $users = [];
 
-        for ($i=1; $i < 10 ; $i++) { 
-
+        for ($i = 1; $i < 10; $i++) {
             $user = new User();
 
             $user
-                ->setNom( $this->faker->lastName() )
-                ->setPrenom( $this->faker->firstName() )
-                ->setPseudo( mt_rand(0, 1) == 1 ? $this->faker->firstName() : null )
-                ->setEmail( $this->faker->email() )
+                ->setNom($this->faker->lastName())
+                ->setPrenom($this->faker->firstName())
+                ->setPseudo(mt_rand(0, 1) == 1 ? $this->faker->firstName() : null)
+                ->setEmail($this->faker->email())
                 ->setRoles(['ROLE_USER'])
                 ->setPlainPassword('Test2023') // rattaché à mon eventListener (userListener)
             ;
@@ -49,16 +48,14 @@ class AppFixtures extends Fixture
         }
 
         // Ingrédients
-        $ingredients = [] ;
-        
-        for ($i=1; $i < 50 ; $i++) { 
+        $ingredients = [];
 
+        for ($i = 1; $i < 50; $i++) {
             $ingredient = new Ingredient();
             $ingredient
-                ->setNom( $this->faker->word(3) )
-                ->setPrix( mt_rand(0, 100) )
-                ->setUser( $users[mt_rand( 0 , count($users) - 1 )] )
-            ;
+                ->setNom($this->faker->word(3))
+                ->setPrix(mt_rand(0, 100))
+                ->setUser($users[mt_rand(0, count($users) - 1)]);
 
             $ingredients[] =  $ingredient;
 
@@ -66,27 +63,42 @@ class AppFixtures extends Fixture
         }
 
         //recettes
-        for ($i=1; $i < 25 ; $i++) { 
-
+        $recettes = [];
+        for ($i = 1; $i < 25; $i++) {
             $recette = new Recette();
             $recette
-                ->setNom( $this->faker->word() )
-                ->setTime( mt_rand(0, 1) == 1 ? mt_rand(1, 1441) : null)
-                ->setnbPersonne( mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
-                ->setDifficulte( mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
-                ->setDescription( $this->faker->text(150) )
-                ->setPrix( mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
-                ->setIsFavori( mt_rand(0, 1) == 1 ? true : false)
-                ->setIsPublique( mt_rand(0, 1) == 1 ? true : false )
-                ->setUser( $users[ mt_rand( 0 , count($users) - 1 ) ] )
-            ;
+                ->setNom($this->faker->word())
+                ->setTime(mt_rand(0, 1) == 1 ? mt_rand(1, 1441) : null)
+                ->setnbPersonne(mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
+                ->setDifficulte(mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
+                ->setDescription($this->faker->text(150))
+                ->setPrix(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
+                ->setIsFavori(mt_rand(0, 1) == 1 ? true : false)
+                ->setIsPublique(mt_rand(0, 1) == 1 ? true : false)
+                ->setUser($users[mt_rand(0, count($users) - 1)]);
 
-            for ($j=0; $j < mt_rand(5, 15); $j++) { 
-                $recette->addIngredient( $ingredients[ mt_rand(0, count($ingredients) -1)]);
+            for ($j = 0; $j < mt_rand(5, 15); $j++) {
+                $recette->addIngredient($ingredients[mt_rand(0, count($ingredients) - 1)]);
             }
 
+            $recettes[] = $recette;
             $manager->persist($recette);
         }
+
+        // notes
+        foreach( $recettes as $recette){
+            for ($i = 1; $i < mt_rand(0 , 4); $i++) {
+                $note = new Note();
+                $note
+                    ->setNote( mt_rand(1, 5) )
+                    ->setRecette( $recettes[mt_rand(0, count($recettes) - 1)] )
+                    ->setUser( $users[mt_rand(0, count($users) - 1)] )
+                ;
+    
+                $manager->persist($note);
+            }
+        }
+        
 
         $manager->flush();
     }
