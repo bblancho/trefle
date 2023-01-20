@@ -9,10 +9,14 @@
     {{ include('partials/_message.html.twig') }}
 
 	<div class="container">
-		{{ dump(recette) }}
 
 		<h1 class='mt-4'> Description de la recette : {{ recette.nom|upper }} </h1>
-		<span class="badge bg-primary"> Créée le {{ recette.createdAt|date('d/m/Y') }} </span>
+
+		<p> La moyenne est de cette recette est de {{ recette.moyenne }}/5 . </p>
+
+		<div>
+			<span class="badge bg-primary"> Créée le {{ recette.createdAt|date('d/m/Y') }} </span>
+		</div>
 
 		{% if recette.time %}
 			<p> Temps (en minute) :

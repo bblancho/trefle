@@ -53,6 +53,8 @@ class Recette
     #[Assert\LessThan(1000)]
     private ?float $prix = null;
 
+    private ?float $moyenne = null;
+
     #[ORM\Column]
     private bool $isFavori ;
 
@@ -173,6 +175,27 @@ class Recette
     public function getPrix(): ?float
     {
         return $this->prix;
+    }
+
+    public function getMoyenne(): ?float
+    {
+        $notes = $this->notes ;
+
+        if( $notes->toArray() === [] ){
+            $this->moyenne = null ;
+
+            return $this->moyenne;
+        }
+
+        $total = 0;
+
+        foreach( $notes as $note){
+            $total += $note->getNote() ; 
+        }
+
+        $this->moyenne = $total / count($notes) ;
+
+        return $this->moyenne;
     }
 
     public function setPrix(?float $prix): self
